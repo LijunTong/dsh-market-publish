@@ -9,18 +9,34 @@
 
 ---
 
-## 0. 最短路径
+## 0. 先确认怎么运行这个工具
 
-在插件仓库根目录执行：
+下面三种写法等价，选你现在能用的那条：
+
+| 场景 | 命令 |
+| --- | --- |
+| 已 clone 本仓库（dsh-market-publish 源码），并在该仓库根目录 | `node bin/cli.mjs` |
+| 任意目录、包还没发到 npm | `npx --yes github:<owner>/dsh-market-publish` |
+| 包已发布到 npm | `npx --yes dsh-market-publish` |
+
+`<owner>` 换成你的 GitHub 用户名。**目前这个包还没发布到 npm**，所以直接 `npx --yes dsh-market-publish` 会报 `404 Not Found`，请用前两种之一。正文为了简短，统一写成：
+
+```bash
+npx --yes github:<owner>/dsh-market-publish
+```
+
+## 0.1 最短路径
+
+在**插件仓库**根目录执行（不是在本工具仓库里）：
 
 ```bash
 # 1. 只检查 + 生成条目（不联网提交）
-npx --yes dsh-market-publish
+npx --yes github:<owner>/dsh-market-publish
 
 # 2. 按输出把「还差这些」逐条修掉，再跑一次，确认退出码为 0
 
 # 3. 真正投稿：fork + commit + 开 PR
-npx --yes dsh-market-publish --apply
+npx --yes github:<owner>/dsh-market-publish --apply
 ```
 
 `--apply` 需要 GitHub token。已经 `gh auth login` 过就不必再设，否则：
@@ -31,13 +47,6 @@ export GITHUB_TOKEN=ghp_xxx
 
 # Windows PowerShell
 $env:GITHUB_TOKEN = "ghp_xxx"
-```
-
-如果这个包还没有发布到 npm，就在本仓库里用源码跑，参数完全相同：
-
-```bash
-node bin/cli.mjs
-node bin/cli.mjs --apply
 ```
 
 ---
@@ -83,7 +92,7 @@ node bin/cli.mjs --apply
 ### 第 1 步：自检
 
 ```bash
-npx --yes dsh-market-publish
+npx --yes github:<owner>/dsh-market-publish
 ```
 
 在插件仓库根目录运行。工具会：
@@ -142,7 +151,7 @@ description:
 想写到指定位置、或想直接看文件，用 `--out`：
 
 ```bash
-npx --yes dsh-market-publish --out ./owner__name.yml
+npx --yes github:<owner>/dsh-market-publish --out ./owner__name.yml
 ```
 
 确认这几点再往下走：
@@ -156,7 +165,7 @@ npx --yes dsh-market-publish --out ./owner__name.yml
 ### 第 4 步：正式投稿
 
 ```bash
-npx --yes dsh-market-publish --apply
+npx --yes github:<owner>/dsh-market-publish --apply
 ```
 
 这一步会：
@@ -317,8 +326,8 @@ token 需要 `public_repo` 权限。它只发给 `api.github.com`，不落盘、
 
 ## 7. 常见问题
 
-**Q：`npx` 报找不到包？**
-这个包可能还没发布到 npm。在源码仓库里用 `node bin/cli.mjs`，参数相同。
+**Q：`npx` 报 `404 Not Found`？**
+不是工具坏了，是这个包还没发布到 npm，registry 里查不到。改用 `npx --yes github:<owner>/dsh-market-publish`，或 clone 本仓库后 `node bin/cli.mjs`，参数完全相同。
 
 **Q：仓库刚建，非要等满 1 天吗？**
 是，CI 硬门槛。差几小时也不行，工具会告诉你还差多少。等够再提，重新提交没有惩罚。

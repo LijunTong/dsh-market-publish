@@ -8,20 +8,20 @@
 
 ## 用法
 
-在插件仓库根目录运行：
+在插件仓库根目录运行。包还没发布到 npm，所以用 GitHub 源（`<owner>` 换成你的 GitHub 用户名）；已 clone 本仓库则改用 `node bin/cli.mjs`，参数相同：
 
 ```bash
 # 只检查 + 生成条目（不联网提交，条目写到系统临时目录并打印出来）
-npx dsh-market-publish
+npx --yes github:<owner>/dsh-market-publish
 
 # 指定分类与描述
-npx dsh-market-publish --category git --zh "在输入框旁切换 Git 分支。"
+npx --yes github:<owner>/dsh-market-publish --category git --zh "在输入框旁切换 Git 分支。"
 
 # 真正投稿：fork + commit + 开 PR
-GITHUB_TOKEN=xxx npx dsh-market-publish --apply
+GITHUB_TOKEN=xxx npx --yes github:<owner>/dsh-market-publish --apply
 ```
 
-从源码跑：`node bin/cli.mjs`，参数相同。
+包发布到 npm 之后，上面三行可以换成 `npx --yes dsh-market-publish ...`。
 
 ## 它会检查什么
 
