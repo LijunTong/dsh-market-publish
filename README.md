@@ -6,22 +6,28 @@
 
 详细的分步操作、参数说明与错误对照见 [docs/OPERATIONS.md](./docs/OPERATIONS.md)。
 
+## 安装
+
+只依赖 Node.js 20 或更新版本，没有第三方依赖：
+
+```bash
+git clone <工具仓库地址> dsh-market-publish
+```
+
 ## 用法
 
-在你要投稿的插件仓库根目录运行。包还没发布到 npm，所以用 GitHub 源（`<owner>` 是本工具仓库的 GitHub 账号，不是你的账号）：
+在**你要投稿的插件仓库**根目录运行（把 `<dsh-market-publish 目录>` 换成实际克隆路径）：
 
 ```bash
 # 只检查 + 生成条目（不联网提交，条目写到系统临时目录并打印出来）
-npx --yes github:<owner>/dsh-market-publish
+node <dsh-market-publish 目录>/bin/cli.mjs
 
 # 指定分类与描述
-npx --yes github:<owner>/dsh-market-publish --category git --zh "在输入框旁切换 Git 分支。"
+node <dsh-market-publish 目录>/bin/cli.mjs --category git --zh "在输入框旁切换 Git 分支。"
 
 # 真正投稿：fork + commit + 开 PR
-GITHUB_TOKEN=xxx npx --yes github:<owner>/dsh-market-publish --apply
+GITHUB_TOKEN=xxx node <dsh-market-publish 目录>/bin/cli.mjs --apply
 ```
-
-包发布到 npm 之后，上面三行可以换成 `npx --yes dsh-market-publish ...`。
 
 ## 它会检查什么
 

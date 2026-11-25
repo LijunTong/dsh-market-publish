@@ -9,28 +9,26 @@
 
 ---
 
-## 0. 命令怎么跑
+## 0. 准备：克隆这个工具
 
-下面所有命令都在**你要投稿的插件仓库根目录**执行。
-
-这个包还没发布到 npm，所以用 GitHub 源跑；`<owner>` 是本工具仓库所在的 GitHub 账号（不是你的账号）：
+工具只依赖 Node.js 20 或更新版本，没有任何第三方依赖，克隆下来就能用：
 
 ```bash
-npx --yes github:<owner>/dsh-market-publish
+git clone <工具仓库地址> dsh-market-publish
 ```
-
-包发布到 npm 之后，换成 `npx --yes dsh-market-publish` 即可，参数完全相同。
 
 ## 0.1 最短路径
 
+进入**你要投稿的插件仓库**根目录，用刚克隆目录里的 `bin/cli.mjs`。下文统一写作 `node <dsh-market-publish 目录>/bin/cli.mjs`，把尖括号部分换成你实际的克隆路径：
+
 ```bash
 # 1. 只检查 + 生成条目（不联网提交）
-npx --yes github:<owner>/dsh-market-publish
+node <dsh-market-publish 目录>/bin/cli.mjs
 
 # 2. 按输出把「还差这些」逐条修掉，再跑一次，确认退出码为 0
 
 # 3. 真正投稿：fork + commit + 开 PR
-npx --yes github:<owner>/dsh-market-publish --apply
+node <dsh-market-publish 目录>/bin/cli.mjs --apply
 ```
 
 `--apply` 需要 GitHub token。已经 `gh auth login` 过就不必再设，否则：
@@ -86,7 +84,7 @@ $env:GITHUB_TOKEN = "ghp_xxx"
 ### 第 1 步：自检
 
 ```bash
-npx --yes github:<owner>/dsh-market-publish
+node <dsh-market-publish 目录>/bin/cli.mjs
 ```
 
 在插件仓库根目录运行。工具会：
@@ -145,7 +143,7 @@ description:
 想写到指定位置、或想直接看文件，用 `--out`：
 
 ```bash
-npx --yes github:<owner>/dsh-market-publish --out ./owner__name.yml
+node <dsh-market-publish 目录>/bin/cli.mjs --out ./owner__name.yml
 ```
 
 确认这几点再往下走：
@@ -159,7 +157,7 @@ npx --yes github:<owner>/dsh-market-publish --out ./owner__name.yml
 ### 第 4 步：正式投稿
 
 ```bash
-npx --yes github:<owner>/dsh-market-publish --apply
+node <dsh-market-publish 目录>/bin/cli.mjs --apply
 ```
 
 这一步会：
@@ -320,8 +318,8 @@ token 需要 `public_repo` 权限。它只发给 `api.github.com`，不落盘、
 
 ## 7. 常见问题
 
-**Q：`npx` 报 `404 Not Found`？**
-不是工具坏了，是这个包还没发布到 npm，registry 里查不到。改用 `npx --yes github:<owner>/dsh-market-publish` 即可，参数完全相同。
+**Q：能像别的工具那样用 `npx` 直接跑吗？**
+暂时不能。本工具还没发布到 npm，`npx dsh-market-publish` 会报 `404 Not Found`。按第 0 节把仓库克隆下来，用 `node <克隆目录>/bin/cli.mjs` 运行，效果完全一样。
 
 **Q：仓库刚建，非要等满 1 天吗？**
 是，CI 硬门槛。差几小时也不行，工具会告诉你还差多少。等够再提，重新提交没有惩罚。
