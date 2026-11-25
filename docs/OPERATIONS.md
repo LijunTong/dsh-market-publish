@@ -19,17 +19,19 @@ git clone <工具仓库地址> dsh-market-publish
 
 ## 0.1 最短路径
 
-进入**你要投稿的插件仓库**根目录，用刚克隆目录里的 `bin/cli.mjs`。下文统一写作 `node <dsh-market-publish 目录>/bin/cli.mjs`，把尖括号部分换成你实际的克隆路径：
+不用切换目录：在任意位置运行，用 `--dir` 指向你的插件仓库。下文统一写作 `node <dsh-market-publish 目录>/bin/cli.mjs --dir <插件目录>`，把两个尖括号部分换成实际路径。
 
 ```bash
 # 1. 只检查 + 生成条目（不联网提交）
-node <dsh-market-publish 目录>/bin/cli.mjs
+node <dsh-market-publish 目录>/bin/cli.mjs --dir <插件目录>
 
 # 2. 按输出把「还差这些」逐条修掉，再跑一次，确认退出码为 0
 
 # 3. 真正投稿：fork + commit + 开 PR
-node <dsh-market-publish 目录>/bin/cli.mjs --apply
+node <dsh-market-publish 目录>/bin/cli.mjs --dir <插件目录> --apply
 ```
+
+`--dir` 可以省略：当前目录就是插件仓库时直接跑。插件仓库没有 origin remote 时，再加 `--repo owner/name`。
 
 `--apply` 需要 GitHub token。已经 `gh auth login` 过就不必再设，否则：
 
@@ -84,12 +86,12 @@ $env:GITHUB_TOKEN = "ghp_xxx"
 ### 第 1 步：自检
 
 ```bash
-node <dsh-market-publish 目录>/bin/cli.mjs
+node <dsh-market-publish 目录>/bin/cli.mjs --dir <插件目录>
 ```
 
-在插件仓库根目录运行。工具会：
+工具会：
 
-1. 读当前目录的 `package.json`；
+1. 读 `--dir` 指向目录（默认当前目录）的 `package.json`；
 2. 从 `git remote get-url origin` 解析 `owner/name`（解析不到就用 `--repo` 指定）；
 3. 从 `keywords` 里找第一个合法分类（找不到就用 `--category` 指定）；
 4. 跑本地检查，再跑 GitHub 侧检查（`--no-check` 可跳过）；
@@ -143,7 +145,7 @@ description:
 想写到指定位置、或想直接看文件，用 `--out`：
 
 ```bash
-node <dsh-market-publish 目录>/bin/cli.mjs --out ./owner__name.yml
+node <dsh-market-publish 目录>/bin/cli.mjs --dir <插件目录> --out ./owner__name.yml
 ```
 
 确认这几点再往下走：
@@ -157,7 +159,7 @@ node <dsh-market-publish 目录>/bin/cli.mjs --out ./owner__name.yml
 ### 第 4 步：正式投稿
 
 ```bash
-node <dsh-market-publish 目录>/bin/cli.mjs --apply
+node <dsh-market-publish 目录>/bin/cli.mjs --dir <插件目录> --apply
 ```
 
 这一步会：
@@ -263,7 +265,7 @@ token 需要 `public_repo` 权限。它只发给 `api.github.com`，不落盘、
 | `参数错误：unknown option: --xxx` | 参数名拼错或不存在 | 对照第 4 节 |
 | `参数错误：--repo needs a value` | 需要值的参数后面没跟值 | 补上值 |
 | `参数错误：unexpected argument: xxx` | 多传了位置参数 | 删掉或改成 `--dir` |
-| `找不到 <path> —— 请在插件仓库根目录运行，或用 --dir 指定` | 当前目录没有 `package.json` | `cd` 到插件根目录，或 `--dir` |
+| `找不到 <path> —— 请在插件仓库根目录运行，或用 --dir 指定` | 当前目录没有 `package.json` | 用 `--dir` 指向插件根目录 |
 | `<path> 不是合法 JSON：...` | `package.json` 语法错误 | 修 JSON |
 | `无法确定目标仓库：用 --repo owner/name 指定，或先 git remote add origin <GitHub 地址>` | 没有 origin，或 origin 不是 GitHub | 加 remote 或 `--repo` |
 | `分类无效或缺失：用 --category 指定，可选 ...` | `keywords` 里没有合法分类，或 `--category` 拼错 | `--category` 选附录里的值 |

@@ -16,18 +16,20 @@ git clone <工具仓库地址> dsh-market-publish
 
 ## 用法
 
-在**你要投稿的插件仓库**根目录运行（把 `<dsh-market-publish 目录>` 换成实际克隆路径）：
+在任意目录运行，用 `--dir` 指向你的插件仓库（把两个尖括号部分换成实际路径）：
 
 ```bash
 # 只检查 + 生成条目（不联网提交，条目写到系统临时目录并打印出来）
-node <dsh-market-publish 目录>/bin/cli.mjs
+node <dsh-market-publish 目录>/bin/cli.mjs --dir <插件目录>
 
 # 指定分类与描述
-node <dsh-market-publish 目录>/bin/cli.mjs --category git --zh "在输入框旁切换 Git 分支。"
+node <dsh-market-publish 目录>/bin/cli.mjs --dir <插件目录> --category git --zh "在输入框旁切换 Git 分支。"
 
 # 真正投稿：fork + commit + 开 PR
-GITHUB_TOKEN=xxx node <dsh-market-publish 目录>/bin/cli.mjs --apply
+GITHUB_TOKEN=xxx node <dsh-market-publish 目录>/bin/cli.mjs --dir <插件目录> --apply
 ```
+
+`--dir` 可省略（当前目录就是插件仓库时）；仓库没有 `origin` remote 时加 `--repo owner/name`。
 
 ## 它会检查什么
 
