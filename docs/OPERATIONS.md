@@ -9,25 +9,19 @@
 
 ---
 
-## 0. 先确认怎么运行这个工具
+## 0. 命令怎么跑
 
-下面三种写法等价，选你现在能用的那条：
+下面所有命令都在**你要投稿的插件仓库根目录**执行。
 
-| 场景 | 命令 |
-| --- | --- |
-| 已 clone 本仓库（dsh-market-publish 源码），并在该仓库根目录 | `node bin/cli.mjs` |
-| 任意目录、包还没发到 npm | `npx --yes github:<owner>/dsh-market-publish` |
-| 包已发布到 npm | `npx --yes dsh-market-publish` |
-
-`<owner>` 换成你的 GitHub 用户名。**目前这个包还没发布到 npm**，所以直接 `npx --yes dsh-market-publish` 会报 `404 Not Found`，请用前两种之一。正文为了简短，统一写成：
+这个包还没发布到 npm，所以用 GitHub 源跑；`<owner>` 是本工具仓库所在的 GitHub 账号（不是你的账号）：
 
 ```bash
 npx --yes github:<owner>/dsh-market-publish
 ```
 
-## 0.1 最短路径
+包发布到 npm 之后，换成 `npx --yes dsh-market-publish` 即可，参数完全相同。
 
-在**插件仓库**根目录执行（不是在本工具仓库里）：
+## 0.1 最短路径
 
 ```bash
 # 1. 只检查 + 生成条目（不联网提交）
@@ -327,7 +321,7 @@ token 需要 `public_repo` 权限。它只发给 `api.github.com`，不落盘、
 ## 7. 常见问题
 
 **Q：`npx` 报 `404 Not Found`？**
-不是工具坏了，是这个包还没发布到 npm，registry 里查不到。改用 `npx --yes github:<owner>/dsh-market-publish`，或 clone 本仓库后 `node bin/cli.mjs`，参数完全相同。
+不是工具坏了，是这个包还没发布到 npm，registry 里查不到。改用 `npx --yes github:<owner>/dsh-market-publish` 即可，参数完全相同。
 
 **Q：仓库刚建，非要等满 1 天吗？**
 是，CI 硬门槛。差几小时也不行，工具会告诉你还差多少。等够再提，重新提交没有惩罚。
