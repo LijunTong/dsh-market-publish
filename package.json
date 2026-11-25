@@ -1,0 +1,33 @@
+{
+  "name": "dsh-market-publish",
+  "version": "0.1.0",
+  "description": "Check a DeepSeek Harness plugin repository against the awesome-dsh-plugin rules and open the listing pull request.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "dsh-market-publish": "./bin/cli.mjs"
+  },
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "market",
+    "publish",
+    "awesome-dsh-plugin"
+  ]
+}
