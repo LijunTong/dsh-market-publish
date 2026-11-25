@@ -5,7 +5,7 @@
 - 第一次把自己的 DSH 插件投稿到 [awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin) 的作者；
 - 已经投过稿、需要更新条目或用 CI 复检检查逻辑的人。
 
-工具本身只做一件事：在插件仓库里按清单规则检查一遍，生成 `data/plugins/<owner>__<repo>.yml`，必要时 fork 清单仓库、提交这个文件、开 PR。它不碰 README，也不改你的插件代码。
+工具做两件事：在插件仓库里按清单规则检查一遍，生成 `data/plugins/<owner>__<repo>.yml`，必要时 fork 清单仓库、提交这个文件、开 PR；以及（可选）把包发到 npm。它不碰 README，也不改你的插件代码。
 
 ---
 
@@ -45,6 +45,27 @@ $env:GITHUB_TOKEN = "ghp_xxx"
 
 ---
 
+## 0.2 图形界面：填个地址就行
+
+不想记参数就用界面，它和命令行走的是同一份检查代码：
+
+```bash
+npm run gui                 # 在工具目录里执行，等价于 node bin/gui.mjs
+# 端口被占用时：DSH_MARKET_PORT=4781 node bin/gui.mjs
+```
+
+浏览器打开它打印的地址（默认 `http://127.0.0.1:4780`），然后：
+
+1. **插件地址**：填 `https://github.com/owner/repo`（工具会浅克隆到临时目录，用完自动删），或者填本地已经 clone 好的插件目录路径。填本地目录时完全不联网。
+2. 分类从下拉框选；描述、图标、tarball 留空就取插件 `package.json` 里的默认值。
+3. 点 **检查**。通过会直接显示「要提交的条目」；不通过就在下面逐条列出「哪里不对 + 怎么改」，改完再点一次。
+4. 点 **开收录 PR**：完成 fork、建分支、提交条目、开 PR，成功后显示 PR 链接。
+5. 要发 npm，用页面下半部分：先点 **打包预览**（列出将进入 tarball 的文件与体积），确认无误再点 **确认发布**。
+
+GitHub token 可以留空（按第 5 节的顺序自动找）；填了也只保存在当前页面内存里。界面只监听 `127.0.0.1`，别人访问不到。
+
+> 填 GitHub 地址却提示「克隆失败 / Could not connect to server」时，通常是这台机器连不上 github.com：先设 `HTTPS_PROXY`，或者把仓库 clone 到本地后改填本地目录。
+
 ## 1. 投稿前：先满足这些条件
 
 清单的 CI 和人工评审看的是同一组条件。工具能自动查的会查，查不了的会写在下面的「怎么确认」里。
@@ -82,6 +103,8 @@ $env:GITHUB_TOKEN = "ghp_xxx"
 ---
 
 ## 2. 五步操作
+
+下面用命令行演示这五步；界面里是同样的五步，只是把命令换成按钮（见 0.2）。
 
 ### 第 1 步：自检
 
@@ -346,6 +369,30 @@ token 需要 `public_repo` 权限。它只发给 `api.github.com`，不落盘、
 
 **Q：聚合包（只依赖别的插件、自己没行为）能收录吗？**
 不能。清单收的是单个插件；聚合包请只投它包含的插件。
+
+---
+
+## 7.1 发布到 npm（可选）
+
+市场收录不要求 npm 包；发了之后用户可以用 `dsh plugin --profile <名字> add <包名>` 直接装。界面和命令行都能发。
+
+**界面**：插件地址填好后，用页面下半部分。先点 **打包预览**（执行 `npm pack --dry-run`，列出真正会进 tarball 的文件和体积），确认没漏文件，再点 **确认发布**（会再确认一次）。npm token 留空时用本机 `npm login` 的登录态。
+
+**命令行**：
+
+```bash
+cd <插件目录>
+npm login              # 已经登录过就跳过
+npm publish --access public
+```
+
+发布前顺手确认三件事：
+
+- `name` 没被别人占用（`npm view <包名>`），`version` 没发布过；
+- 开了 2FA 的账号在 CI 里要用 automation token，交互式发布不受影响；
+- `files` 字段别把 `node_modules`、测试产物带进去 —— 打包预览里一眼能看到。
+
+工具不会替你改版本号：重发报 `E403 ... cannot publish over the previously published versions` 时，先把 `version` 加一再发。
 
 ---
 

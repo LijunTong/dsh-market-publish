@@ -68,6 +68,7 @@ function baseIo(overrides) {
       cwd: overrides.dir,
       env: {},
       exec: () => 'https://github.com/a/b.git',
+      readGhToken: () => null,
       fetchText: async () => ({ ok: true, text: PACKAGE }),
       sleep: async () => {},
       forkAttempts: 1,

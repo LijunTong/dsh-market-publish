@@ -4,6 +4,8 @@
 
 投一个插件到市场，本质上是在清单仓库里新增一行 YAML：`data/plugins/<owner>__<repo>.yml`。这个工具把清单的准入规则（`contributing.md`）变成可执行的检查，本地跑一遍就知道还差什么，加上 `--apply` 会帮你 fork、提交、开 PR。
 
+也提供一个本地图形界面：填一个 GitHub 地址（或本地目录），点几下就能完成检查、开收录 PR 和发布到 npm。
+
 详细的分步操作、参数说明与错误对照见 [docs/OPERATIONS.md](./docs/OPERATIONS.md)。
 
 ## 安装
@@ -14,9 +16,27 @@
 git clone https://github.com/LijunTong/dsh-market-publish.git
 ```
 
+## 图形界面
+
+不想记参数时启动本地界面（默认监听 `http://127.0.0.1:4780`）：
+
+```bash
+npm run gui          # 等价于 node bin/gui.mjs
+# 端口被占用时：DSH_MARKET_PORT=4781 node bin/gui.mjs
+```
+
+页面上只填一个地址就够：
+
+1. **插件地址** 填 `https://github.com/owner/repo`（自动浅克隆到临时目录，用完即删），或填本地已 clone 的插件目录路径。
+2. 点 **检查**：通过就直接给出条目预览；不通过逐条列出「哪里不对 + 怎么改」，改完再点一次即可。
+3. 点 **开收录 PR**：`fork → 分支 → 提交条目 → 开 PR`，成功后按钮位置变成 PR 链接。
+4. 下面的 **发布到 npm**：先读 `npm pack --dry-run` 的文件清单和体积，再点一次 **确认发布** 才会真的 `npm publish`。
+
+GitHub token 留空时按下面「认证」一节的顺序取；npm token 留空时用本机 `npm login` 的登录态。界面和命令行共用同一套检查代码，结论一致。
+
 ## 用法
 
-在任意目录运行，用 `--dir` 指向你的插件仓库（把两个尖括号部分换成实际路径）：
+也可以只用命令行。在任意目录运行，用 `--dir` 指向你的插件仓库（把两个尖括号部分换成实际路径）：
 
 ```bash
 # 只检查 + 生成条目（不联网提交，条目写到系统临时目录并打印出来）
@@ -96,6 +116,12 @@ console.log([...local.issues, ...remote.issues])
 | 路径 | 内容 |
 | --- | --- |
 | `bin/cli.mjs` | 命令行入口 |
+| `bin/gui.mjs` | 图形界面入口（启动本地 HTTP 服务） |
+| `src/server.js` | 界面背后的 HTTP 接口：检查、开 PR、发 npm |
+| `src/workspace.js` | 把「GitHub 地址 / 本地目录」变成可检查的工作区 |
+| `src/report.js` | 把检查结论翻译成「原因 + 改法」 |
+| `src/npm.js` | npm 包体检与发布（token 只进子进程环境） |
+| `public/` | 界面本身：`index.html`、`app.js`、`style.css` |
 | `src/cli.js` | 流程编排（参数、检查、写条目、提交） |
 | `src/checks.js` | 准入规则：本地包、描述、图标、远端仓库 |
 | `src/entry.js` | 清单条目的 YAML 生成 |
@@ -110,5 +136,7 @@ console.log([...local.issues, ...remote.issues])
 - 只处理「新增/更新自己的那一行」，不碰 README（清单自动生成）
 - 一个 PR 只投一个插件（清单要求一个 PR 最多 3 条）
 - 仓库不满 1 天时只能等，工具会明确告诉你还差多少
+- 发 npm 需要本机有 `npm` 和对应账号；同名版本已存在时工具会拦下，先改版本号
+- 图形界面只监听 `127.0.0.1`，token 只在单次请求的内存里使用，不落盘也不打印
 
 MIT License，见 [LICENSE](./LICENSE)。

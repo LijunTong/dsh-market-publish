@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DSH 插件投稿</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <h1>DSH 插件投稿</h1>
+        <p class="lede">填一个 GitHub 地址，检查通过后一键开收录 PR，顺便把同一个包发到 npm。</p>
+      </header>
+
+      <section class="card">
+        <label class="field">
+          <span>插件地址</span>
+          <input
+            id="input"
+            type="text"
+            spellcheck="false"
+            autocomplete="off"
+            placeholder="https://github.com/owner/repo 或本地目录 D:\code\my-plugin"
+          />
+        </label>
+        <p class="hint">GitHub 地址会浅克隆到临时目录再检查；本地目录直接读，用完即删。</p>
+
+        <details class="advanced">
+          <summary>可选：分类与描述</summary>
+          <div class="grid">
+            <label class="field">
+              <span>仓库名</span>
+              <input id="repo" type="text" placeholder="owner/name，留空自动从 git remote 读" />
+            </label>
+            <label class="field">
+              <span>分类</span>
+              <select id="category">
+                <option value="">按 package.json 的 keywords 自动判断</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>英文描述</span>
+              <input id="en" type="text" placeholder="留空则用 package.json 的 description" />
+            </label>
+            <label class="field">
+              <span>中文描述</span>
+              <input id="zh" type="text" placeholder="可选，会写进条目" />
+            </label>
+            <label class="field">
+              <span>图标</span>
+              <input id="icon" type="text" placeholder="https://raw.githubusercontent.com/…/icon.png" />
+            </label>
+            <label class="field">
+              <span>tarball</span>
+              <input id="tarball" type="text" placeholder="可选：Release 里的 .tgz 地址" />
+            </label>
+          </div>
+        </details>
+
+        <label class="field">
+          <span>GitHub token</span>
+          <input id="token" type="password" placeholder="可选：留空则用 GITHUB_TOKEN / GH_TOKEN / gh auth" />
+        </label>
+
+        <div class="actions">
+          <button id="check" class="primary" type="button">检查</button>
+          <button id="publish-market" class="ghost" type="button" disabled>开收录 PR</button>
+        </div>
+      </section>
+
+      <section id="result" class="card" hidden>
+        <div id="status" class="status"></div>
+        <ul id="issues" class="issues"></ul>
+        <ul id="notes" class="notes"></ul>
+        <details id="entry-box" class="entry" hidden>
+          <summary>条目内容 <code id="entry-path"></code></summary>
+          <pre id="entry"></pre>
+        </details>
+      </section>
+
+      <section class="card npm">
+        <h2>发布到 npm</h2>
+        <p class="hint">
+          用同一个地址读 package.json，预览将上传的文件；确认后才会真正 <code>npm publish</code>。token 留空则用本机 npm 登录态。
+        </p>
+        <label class="field">
+          <span>npm token</span>
+          <input id="npm-token" type="password" placeholder="可选：npm_ 开头的 Automation token" />
+        </label>
+        <div class="actions">
+          <button id="npm-check" class="ghost" type="button">检查 npm 包</button>
+        </div>
+        <div id="npm-result" class="result" hidden></div>
+      </section>
+
+      <footer class="foot">
+        同样的检查在命令行也能跑：<code>node bin/cli.mjs --dir &lt;插件目录&gt;</code>
+      </footer>
+    </main>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

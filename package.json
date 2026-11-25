@@ -5,7 +5,8 @@
   "type": "module",
   "license": "MIT",
   "bin": {
-    "dsh-market-publish": "./bin/cli.mjs"
+    "dsh-market-publish": "./bin/cli.mjs",
+    "dsh-market-publish-gui": "./bin/gui.mjs"
   },
   "exports": {
     ".": "./src/index.js",
@@ -14,6 +15,7 @@
   "files": [
     "bin",
     "src",
+    "public",
     "README.md",
     "LICENSE"
   ],
@@ -21,7 +23,8 @@
     "node": ">=20"
   },
   "scripts": {
-    "test": "node --test test/"
+    "test": "node --test test/",
+    "gui": "node bin/gui.mjs"
   },
   "keywords": [
     "dsh",
