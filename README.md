@@ -4,6 +4,8 @@
 
 投一个插件到市场，本质上是在清单仓库里新增一行 YAML：`data/plugins/<owner>__<repo>.yml`。这个工具把清单的准入规则（`contributing.md`）变成可执行的检查，本地跑一遍就知道还差什么，加上 `--apply` 会帮你 fork、提交、开 PR。
 
+详细的分步操作、参数说明与错误对照见 [docs/OPERATIONS.md](./docs/OPERATIONS.md)。
+
 ## 用法
 
 在插件仓库根目录运行：
