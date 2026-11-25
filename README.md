@@ -11,7 +11,7 @@
 只依赖 Node.js 20 或更新版本，没有第三方依赖：
 
 ```bash
-git clone <工具仓库地址> dsh-market-publish
+git clone https://github.com/LijunTong/dsh-market-publish.git
 ```
 
 ## 用法
